@@ -4,11 +4,11 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-const { PORT, MONGO_URL } = process.env;
+const { PORT } = process.env;
 
 const app = express();
 
-mongoose.connect(MONGO_URL, {
+mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
 
