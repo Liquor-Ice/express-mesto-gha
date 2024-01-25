@@ -30,7 +30,7 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.status(201).send({ data: user }))
     .catch((err) => {
       switch (err.name) {
-        case 'CastError':
+        case 'ValidationError':
           return res.status(400).send({ message: 'Переданы не валидные данные' });
         default:
           return res.status(500).send({ message: 'Ошибка сервера' });
