@@ -22,10 +22,10 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndDelete(req.params.id).orFail(
+  Card.findByIdAndDelete(req.params.cardId).orFail(
     () => new Error('Данная карточка не найдена'),
   )
-    .then((card) => res.send({ data: card }))
+    .then((card) => res.status(200).send({ data: card }))
     .catch((err) => {
       switch (err.name) {
         case 'Error':
