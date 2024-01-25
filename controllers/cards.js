@@ -22,7 +22,7 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.id).orFail(
+  Card.findByIdAndDelete(req.params.id).orFail(
     () => new Error('Данная карточка не найдена'),
   )
     .then((card) => res.send({ data: card }))
@@ -30,6 +30,8 @@ module.exports.deleteCard = (req, res) => {
       switch (err.name) {
         case 'Error':
           return res.status(404).send({ message: err.message });
+        case 'ValidationError':
+          return res.status(400).send({ message: err.message });
         default:
           return res.status(500).send({ message: 'Ошибка сервера' });
       }
@@ -49,7 +51,7 @@ module.exports.likeCard = (req, res) => {
       switch (err.name) {
         case 'Error':
           return res.status(404).send({ message: err.message });
-        case 'ValidationError':
+        case 'CastError':
           return res.status(400).send({ message: 'Переданы некорректные данные' });
         default:
           return res.status(500).send({ message: 'Ошибка сервера' });
@@ -70,7 +72,7 @@ module.exports.dislikeCard = (req, res) => {
       switch (err.name) {
         case 'Error':
           return res.status(404).send({ message: err.message });
-        case 'ValidationError':
+        case 'CastError':
           return res.status(400).send({ message: 'Переданы некорректные данные' });
         default:
           return res.status(500).send({ message: 'Ошибка сервера' });

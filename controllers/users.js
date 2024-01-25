@@ -15,6 +15,8 @@ module.exports.getUserById = (req, res) => {
       switch (err.name) {
         case 'Error':
           return res.status(404).send({ message: err.message });
+        case 'CastError':
+          return res.status(400).send({ message: 'Переданы не валидные данные' });
         default:
           return res.status(500).send({ message: err.message });
       }
@@ -28,7 +30,7 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.status(201).send({ data: user }))
     .catch((err) => {
       switch (err.name) {
-        case 'ValidationError':
+        case 'CastError':
           return res.status(400).send({ message: 'Переданы не валидные данные' });
         default:
           return res.status(500).send({ message: 'Ошибка сервера' });
@@ -49,7 +51,7 @@ module.exports.updateProfile = (req, res) => {
       switch (err.name) {
         case 'Error':
           return res.status(404).send({ message: err.message });
-        case 'ValidationError':
+        case 'CastError':
           return res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
         default:
           return res.status(500).send({ message: 'Ошибка сервера' });
