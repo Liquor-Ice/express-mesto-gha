@@ -15,8 +15,6 @@ module.exports.getUserById = (req, res) => {
       switch (err.name) {
         case 'Error':
           return res.status(404).send({ message: err.message });
-        case 'CastError':
-          return res.status(400).send({ message: 'Передан не валидный ID' });
         default:
           return res.status(500).send({ message: err.message });
       }
