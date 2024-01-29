@@ -35,7 +35,6 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-app.use('/', (req, res) => { res.status(404).send({ message: 'Страница не найдена' }); });
 app.use(celebrate({
   headers: Joi.object().keys({
     authorization: Joi.string(),
