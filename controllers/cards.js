@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
-// const ForbiddenError = require('../errors/ForbiddenError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -23,16 +23,15 @@ module.exports.deleteCard = (req, res, next) => {
   )
     // eslint-disable-next-line consistent-return
     .then((card) => {
-      // if (card.owner !== req.user._id) {
-      //   throw new ForbiddenError('Требуется авторизация');
-      // }
-      // Card.findByIdAndDelete(cardId).orFail(
-      //   () => new NotFoundError('Данная карточка не найдена'),
-      // )
-      //   .then((delCard) => res.status(200).send({ data: delCard }));
-      res.status(200).send({
-        owner: card.owner, user: req.user._id, compare: card.owner !== req.user._id,
-      });
+      const { owner } = card.owner;
+      const user = req.user._id;
+      if (owner !== user) {
+        throw new ForbiddenError('Требуется авторизация');
+      }
+      Card.findByIdAndDelete(cardId).orFail(
+        () => new NotFoundError('Данная карточка не найдена'),
+      )
+        .then((delCard) => res.status(200).send({ data: delCard }));
     })
     .catch(next);
 };
