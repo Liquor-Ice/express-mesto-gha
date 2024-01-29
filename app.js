@@ -9,11 +9,11 @@ const {
   login, createUser,
 } = require('./controllers/users');
 
-const { PORT = 3000, MONGO_URL } = process.env;
+const { PORT = 3000 } = process.env;
 
 const app = express();
 
-mongoose.connect(MONGO_URL, {
+mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 app.use(bodyParser.json());
