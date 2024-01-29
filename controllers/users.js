@@ -75,7 +75,9 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then(({ password, ...user }) => res.status(201).send(user))
+    .then((user) => res.status(201).send({
+      name: user.name, about: user.about, avatar: user.avatar, email: user.email, _id: user._id,
+    }))
     .catch((err) => {
       // eslint-disable-next-line no-constant-condition, no-cond-assign, no-param-reassign
       if (err.code = 11000) {
