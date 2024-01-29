@@ -4,7 +4,7 @@ const ForbiddenError = require('../errors/ForbiddenError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.status(200).send({ data: cards }))
+    .then((cards) => res.status(200).send({ data: cards, user: req.user }))
     .catch(next);
 };
 
@@ -23,7 +23,6 @@ module.exports.deleteCard = (req, res, next) => {
   )
     // eslint-disable-next-line consistent-return
     .then((card) => {
-      console.log(card.owner, req.user);
       if (card.owner !== req.user) {
         return Promise.reject(new ForbiddenError('Требуется авторизация'));
       }
