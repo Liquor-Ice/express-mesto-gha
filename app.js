@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { celebrate, Joi, errors } = require('celebrate');
 const auth = require('./middlewares/auth');
+const NotFoundError = require('./errors/NotFoundError');
 const {
   login, createUser,
 } = require('./controllers/users');
@@ -39,6 +40,8 @@ app.use(auth);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
+
+app.use('/*', () => { throw new NotFoundError('Страница не найдена'); });
 
 app.use(errors());
 // eslint-disable-next-line no-unused-vars

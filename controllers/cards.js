@@ -23,8 +23,8 @@ module.exports.deleteCard = (req, res, next) => {
   )
     // eslint-disable-next-line consistent-return
     .then((card) => {
-      if (card.data.owner !== req.user._id) {
-        return Promise.reject(new ForbiddenError('Требуется авторизация'));
+      if (card.owner !== req.user._id) {
+        throw new ForbiddenError('Требуется авторизация');
       }
       Card.findByIdAndDelete(cardId).orFail(
         () => new NotFoundError('Данная карточка не найдена'),
