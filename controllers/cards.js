@@ -1,6 +1,6 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
-const UnauthorizedError = require('../errors/UnauthorizedError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -24,7 +24,7 @@ module.exports.deleteCard = (req, res, next) => {
     // eslint-disable-next-line consistent-return
     .then((card) => {
       if (card.owner !== req.user._id) {
-        return Promise.reject(new UnauthorizedError('Требуется авторизация'));
+        return Promise.reject(new ForbiddenError('Требуется авторизация'));
       }
       Card.findByIdAndDelete(cardId).orFail(
         () => new NotFoundError('Данная карточка не найдена'),
