@@ -29,17 +29,14 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string(),
+    // eslint-disable-next-line no-useless-escape
+    avatar: Joi.string().pattern(/https?:\/\/w{3}?\.?[\w\-\.~:\/\?#\[\]@!$&'\(\)\*\+,;=]+\b#?/),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
   }),
 }), createUser);
 
-app.use(celebrate({
-  headers: Joi.object().keys({
-    authorization: Joi.string(),
-  }),
-}), auth);
+app.use(auth);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
