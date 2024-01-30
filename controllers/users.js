@@ -82,7 +82,6 @@ module.exports.createUser = (req, res, next) => {
       // eslint-disable-next-line no-constant-condition, no-cond-assign, no-param-reassign
       if (err.code = 11000) {
         next(new ConflictError('Пользователь с данным email уже существует'));
-        return;
       }
       next(err);
     });
