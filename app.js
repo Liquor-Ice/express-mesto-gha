@@ -11,7 +11,6 @@ const NotFoundError = require('./errors/NotFoundError');
 const {
   login, createUser,
 } = require('./controllers/users');
-const { errorHandler } = require('./middlewares/error-handler');
 
 const { PORT = 3000 } = process.env;
 
@@ -48,6 +47,17 @@ app.use('/cards', require('./routes/cards'));
 app.use('/*', () => { throw new NotFoundError('Страница не найдена'); });
 
 app.use(errors());
-app.use(errorHandler);
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  return res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
+});
 
 app.listen(PORT);
