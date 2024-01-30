@@ -3,13 +3,14 @@ const { celebrate, Joi } = require('celebrate');
 const {
   getCards, createCard, deleteCard, likeCard, dislikeCard,
 } = require('../controllers/cards');
+const { urlValidator } = require('../utils/regExps');
 
 router.get('/', getCards);
 
 router.post('/', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(/(https?:\/\/)(w{3}\.)?(\S+)#?/),
+    link: Joi.string().required().pattern(urlValidator),
   }),
 }), createCard);
 

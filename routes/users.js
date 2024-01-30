@@ -3,6 +3,7 @@ const { celebrate, Joi } = require('celebrate');
 const {
   getUsers, getUserById, getUserInfo, updateProfile, updateAvatar,
 } = require('../controllers/users');
+const { urlValidator } = require('../utils/regExps');
 
 router.get('/', getUsers);
 
@@ -23,7 +24,7 @@ router.patch('/me', celebrate({
 
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(/(https?:\/\/)(w{3}\.)?(\S+)#?/),
+    avatar: Joi.string().pattern(urlValidator),
   }),
 }), updateAvatar);
 
