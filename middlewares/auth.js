@@ -6,41 +6,40 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
-  // let payload;
-  const { authorization } = req.headers;
+  let payload;
+  // const { authorization } = req.headers;
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new UnauthorizedError('Необходима авторизация');
-  }
-  const token = authorization.replace('Bearer ', '');
-  jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'strong-secret', (err) => {
-    if (err) {
-      throw new UnauthorizedError('Необходима авторизация');
-    }
-  })
-    .then((payload) => {
-      req.user = payload;
-      next();
-    })
-    .catch(next);
-  // try {
-  //   const { authorization } = req.headers;
-
-  //   if (!authorization || !authorization.startsWith('Bearer ')) {
+  // if (!authorization || !authorization.startsWith('Bearer ')) {
+  //   throw new UnauthorizedError('Необходима авторизация');
+  // }
+  // const token = authorization.replace('Bearer ', '');
+  // jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'strong-secret', (err) => {
+  //   if (err) {
   //     throw new UnauthorizedError('Необходима авторизация');
   //   }
-  //   const token = authorization.replace('Bearer ', '');
-  //   payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'strong-secret',
-  // (err) => {
-  //     if (err) {
-  //       throw new UnauthorizedError('Необходима авторизация');
-  //     }
-  //   });
-  // } catch (err) {
-  //   next(err);
-  // }
+  // })
+  //   .then((payload) => {
+  //     req.user = payload;
+  //     next();
+  //   })
+  //   .catch(next);
+  try {
+    const { authorization } = req.headers;
 
-  // req.user = payload;
+    if (!authorization || !authorization.startsWith('Bearer ')) {
+      throw new UnauthorizedError('Необходима авторизация');
+    }
+    const token = authorization.replace('Bearer ', '');
+    try {
+      payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'strong-secret');
+    } catch (error) {
+      throw new UnauthorizedError('Необходима авторизация');
+    }
+  } catch (err) {
+    next(err);
+  }
 
-  // next();
+  req.user = payload;
+
+  next();
 };
