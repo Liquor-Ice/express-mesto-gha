@@ -1,11 +1,13 @@
-const express = require('express');
 // eslint-disable-next-line import/no-extraneous-dependencies
 require('dotenv').config();
+const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
+const corsController = require('./middlewares/cors');
 const NotFoundError = require('./errors/NotFoundError');
 const {
   login, createUser,
@@ -21,6 +23,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
+app.use(requestLogger); // подключаем логгер запросов
+app.use(corsController);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -45,9 +49,10 @@ app.use('/cards', require('./routes/cards'));
 
 app.use('/*', () => { throw new NotFoundError('Страница не найдена'); });
 
-app.use(errors());
+app.use(errorLogger); // подключаем логгер ошибок
+app.use(errors()); // обработчик ошибок celebrate
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err, req, res, next) => { // централизованный обработчик ошибок
   const { statusCode = 500, message } = err;
 
   return res

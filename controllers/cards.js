@@ -28,9 +28,7 @@ module.exports.deleteCard = (req, res, next) => {
       if (owner !== user) {
         throw new ForbiddenError('Требуется авторизация');
       }
-      Card.findByIdAndDelete(cardId).orFail(
-        () => new NotFoundError('Данная карточка не найдена'),
-      )
+      Card.deleteOne(cardId)
         .then((delCard) => res.status(200).send({ data: delCard }));
     })
     .catch(next);
