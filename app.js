@@ -7,7 +7,7 @@ const helmet = require('helmet');
 const { celebrate, Joi, errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const auth = require('./middlewares/auth');
-// const corsController = require('./middlewares/cors');
+const corsController = require('./middlewares/cors');
 const NotFoundError = require('./errors/NotFoundError');
 const {
   login, createUser,
@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(requestLogger); // подключаем логгер запросов
-// app.use(corsController);
+app.use(corsController);
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
